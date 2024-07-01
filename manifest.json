@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "French Accents",
+    "description": "Write French accents without using Alt codes",
+    "version": "0.1",
+    "action": {
+        "default_icon": {
+            "16": "images/icon16.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+        }
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "commands":{
+        "activate-accents": {
+            "suggested_key": {
+                "default": "Ctrl+Alt+D",
+                "mac": "Command+Alt+D"
+            },
+            "description": "Activate the accents feature. "
+        },
+        "copy-accents": {
+            "suggested_key": {
+                "default": "Ctrl+Alt+P",
+                "mac": "Command+Alt+P"
+            },
+            "description": "Copy a list of all French accents to your clipboard."
+        }
+    }
+}
