@@ -17,8 +17,8 @@
     "commands":{
         "activate-accents": {
             "suggested_key": {
-                "default": "Alt+Shift+D",
-                "mac": "Alt+Shift+D"
+                "default": "Alt+S",
+                "mac": "Alt+S"
             },
             "description": "Activate the accents feature. "
         },

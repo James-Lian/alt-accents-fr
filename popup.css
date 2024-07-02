@@ -11,11 +11,12 @@ h1, h2, h3 {
 }
 
 #box {
-    display: inline-block;
+    display: block;
     width: fit-content;
     background-color: rgba(0, 0, 0, 0.2);
     padding: 8px 8px;
     border-radius: 10px;
+    z-index: 99999999;
 }
 
 .accent-popup {
@@ -26,7 +27,7 @@ h1, h2, h3 {
 
 .accent-text {
     display: inline-block;
-    background-color: black;
+    background-color: #002153;
     color: white;
     opacity: 38%;
     padding:6px 12px;
