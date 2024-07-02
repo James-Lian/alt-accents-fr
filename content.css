@@ -2,15 +2,21 @@ h1, h2, h3 {
     margin: 3px 1px;
 }
 
-#container {
+#overlay-container {
+    position: fixed;
     display: flex;
     flex-direction: column; /* Align items vertically */
     justify-content: center; /* Centers vertically */
     height: 100vh; /* takes the full viewport height and width into consideration */
     align-items: center; /* centers #box */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
 }
 
-#box {
+#overlay-box {
     display: block;
     width: fit-content;
     background-color: rgba(0, 0, 0, 0.2);

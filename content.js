@@ -1,11 +1,12 @@
 var accentSelection = ["é", "è", "ê", "à", "ç" ,"ù", "«", "»", "ë", "ï", "ü", "â", "ô", "î", "û"];
 
-function init() {
+function init() {    
     const container = document.createElement('div');
-    container.id = "container";
+    container.id = "overlay-container";
+    document.body.append(container)
     
     const overlay = document.createElement('div');
-    overlay.id = "box";
+    overlay.id = "overlay-box";
 
     container.appendChild(overlay);
 
@@ -37,6 +38,12 @@ function init() {
 }
 
 init()
+
+var hotkey;
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    hotkey = request.greeting;
+    sendResponse({received: true});
+});
 
 var currSelection = 0;
 var isActive = false;
