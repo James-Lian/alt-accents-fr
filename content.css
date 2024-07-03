@@ -1,4 +1,4 @@
-#overlay-container-accents {
+#overlay-container-accents-jj {
     position: fixed;
     display: flex; 
     flex-direction: column; /* Align items vertically */
@@ -10,24 +10,24 @@
     right: 0;
     bottom: 0;
     pointer-events: none;
+    z-index: 10000000;
 }
 
-#overlay-box-accents {
+#overlay-box-accents-jj {
     display: block;
     width: fit-content;
     background-color: rgba(0, 0, 0, 0.2);
     padding: 8px 8px;
     border-radius: 10px;
-    z-index: 10000000;
 }
 
-.accents-popup-overlay-wrapper {
+.accents-popup-overlay-wrapper-jj {
    display: flex;
    justify-content: center;
    flex-wrap: wrap;
 }
 
-.accents-text-overlay-styles {
+.accents-text-overlay-styles-jj {
     display: inline-block;
     background-color: #002153;
     color: white;
@@ -42,4 +42,5 @@
     margin-bottom: 6px;
     font-size: 28px;
     line-height: 1.38;
+    font-weight: bold;
 }

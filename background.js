@@ -14,12 +14,11 @@ chrome.commands.onCommand.addListener((command) => {
                         }
                     })
                 });
-
                 
                 (async () => {
                     const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-                    console.log(tab);
                     const response = await chrome.tabs.sendMessage(tab.id, {greeting: hotkey});
+                    console.log(response)
                   })();
             }
         }

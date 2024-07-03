@@ -1,82 +1,91 @@
 var accentSelection = ["é", "è", "ê", "à", "ç" ,"ù", "«", "»", "ë", "ï", "ü", "â", "ô", "î", "û"];
+var overlay;
 
 function init() {
     const container = document.createElement('div');
-    container.id = "overlay-container-accents";
+    container.id = "overlay-container-accents-jj";
     document.body.append(container);
     
-    const overlay = document.createElement('div');
-    overlay.id = "overlay-box-accents";
-
+    overlay = document.createElement('div');
+    overlay.id = "overlay-box-accents-jj";
+    
     container.appendChild(overlay);
-
+    
     const accents1 = document.createElement('div');
-    accents1.className = 'accents-popup-overlay-wrapper';
+    accents1.className = 'accents-popup-overlay-wrapper-jj';
     overlay.appendChild(accents1);
-
+    
     for (let i=0; i<6; i++) {
         var accent = document.createElement('h1');
         accent.innerHTML = accentSelection[i];
-        accent.className = 'accents-text-overlay-styles';
+        accent.className = 'accents-text-overlay-styles-jj';
         accent.id = accentSelection[i];
         accents1.appendChild(accent);
     }
 
     const accents2 = document.createElement('div');
-    accents2.className = 'accents-popup-overlay-wrapper';
+    accents2.className = 'accents-popup-overlay-wrapper-jj';
     overlay.appendChild(accents2);
-
+    
     for (let i=6; i<15; i++) {
         var accent = document.createElement('h1');
         accent.innerHTML = accentSelection[i];
-        accent.className = 'accents-text-overlay-styles';
+        accent.className = 'accents-text-overlay-styles-jj';
         accent.id = accentSelection[i];
         accents2.appendChild(accent);
     }
-
-    overlay.style.display = "block";
+    
+    overlay.style.display = "none";
 }
 
 init()
 
-window.onload = function() {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.type = 'text/css';
-    link.href = chrome.runtime.getURL('content.css');
-    
-    document.head.appendChild(link);
-}
-
 var hotkey;
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    hotkey = request.greeting;
-    sendResponse({received: true});
+    if (request.greeting) {
+        hotkey = request.greeting;
+        sendResponse({received: hotkey});
+    }
 });
 
-var currSelection = 0;
+var currSelection = -1;
 var isActive = false;
+
+var altCtrlPressed = false;
+var keyPressed = false;
 
 /* shorcut pressed */
 document.addEventListener('keydown', (event) => {
-    if (!isActive && (event.altKey || event.ctrlKey) && event.code === hotkey.slice(-1)) {
-        isActive = True
+    if (event.altKey || event.ctrlKey) { // Alt or Ctrl key pressed
+        altCtrlPressed = true;
     }
-    else if (isActive && (event.altKey || event.ctrlKey)) {
-        currSelection = 0;
-        updateOverlay(currSelection);
+    else if (event.code.toLowerCase() === hotkey[0].slice(-1)[0].toLowerCase()) { // the action key (e.g. 'S') is pressed
+        keyPressed = true;
+    }
+
+    if (!isActive && (altCtrlPressed || keyPressed)) { // if they were both pressed at the same times, the extension is activated
+        overlay.style.display = "block";
+        isActive = true;
     }
 });
 
 /* shortcut or key released */
 document.addEventListener('keyup', (event) => {
+    if (isActive && (event.altKey || event.ctrlKey)) { // Alt or Ctrl key released - extension is deactivated
+        isActive = false;
+        altCtrlPressed = false;
+        keyPressed = false;
+    }
+    else if (isActive && (event.code.toLowerCase() === hotkey[0].slice(-1)[0].toLowerCase())) { // action key is released - cycling through the accents
+        
+    }
     if (isActive && (event.ctrlKey || event.altKey)) {
         overlay.style.display = "none";
         currSelection = 0;
         isActive = false
         insertAccent(accentSelection[currSelection])
     }
-    else if (isActive && (event.code === hotkey.slice(-1))) {
+    else if (isActive && (event.code === hotkey[0].slice(-1)[0])) {
         currSelection ++;
         updateOverlay(currSelection);
     }
