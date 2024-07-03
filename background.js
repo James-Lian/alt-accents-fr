@@ -4,6 +4,7 @@ chrome.commands.onCommand.addListener((command) => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         if (tabs.length > 0) {
             if (command === 'activate-accents') {
+                hotkey = []
                 // example hotkey: Ctrl/Alt + Shift (optional) + letter 
                 // retrieving the hotkey for extension dynamically (in case the user changes it)
                 chrome.commands.getAll((cmds) => {
@@ -14,8 +15,10 @@ chrome.commands.onCommand.addListener((command) => {
                     })
                 });
 
+                
                 (async () => {
                     const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+                    console.log(tab);
                     const response = await chrome.tabs.sendMessage(tab.id, {greeting: hotkey});
                   })();
             }

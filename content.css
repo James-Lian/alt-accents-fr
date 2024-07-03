@@ -1,10 +1,6 @@
-h1, h2, h3 {
-    margin: 3px 1px;
-}
-
-#overlay-container {
+#overlay-container-accents {
     position: fixed;
-    display: flex;
+    display: flex; 
     flex-direction: column; /* Align items vertically */
     justify-content: center; /* Centers vertically */
     height: 100vh; /* takes the full viewport height and width into consideration */
@@ -16,32 +12,34 @@ h1, h2, h3 {
     pointer-events: none;
 }
 
-#overlay-box {
+#overlay-box-accents {
     display: block;
     width: fit-content;
     background-color: rgba(0, 0, 0, 0.2);
     padding: 8px 8px;
     border-radius: 10px;
-    z-index: 99999999;
+    z-index: 10000000;
 }
 
-.accent-popup {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+.accents-popup-overlay-wrapper {
+   display: flex;
+   justify-content: center;
+   flex-wrap: wrap;
 }
 
-.accent-text {
+.accents-text-overlay-styles {
     display: inline-block;
     background-color: #002153;
     color: white;
     opacity: 38%;
-    padding:6px 12px;
+    padding:8px 12px;
     border-radius: 8px;
     user-select: none;
     font-family:'Segoe UI';
-    margin-left: 3px;
-    margin-right: 3px;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    font-size: 28px;
+    line-height: 1.38;
 }

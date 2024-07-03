@@ -1,43 +1,52 @@
 var accentSelection = ["é", "è", "ê", "à", "ç" ,"ù", "«", "»", "ë", "ï", "ü", "â", "ô", "î", "û"];
 
-function init() {    
+function init() {
     const container = document.createElement('div');
-    container.id = "overlay-container";
-    document.body.append(container)
+    container.id = "overlay-container-accents";
+    document.body.append(container);
     
     const overlay = document.createElement('div');
-    overlay.id = "overlay-box";
+    overlay.id = "overlay-box-accents";
 
     container.appendChild(overlay);
 
     const accents1 = document.createElement('div');
-    accents1.className = 'accent-popup';
+    accents1.className = 'accents-popup-overlay-wrapper';
     overlay.appendChild(accents1);
 
     for (let i=0; i<6; i++) {
-        var accent = document.createElement('h2')
-        accent.innerHTML = accentSelection[i]
-        accent.className = 'accent-text'
-        accent.id = accentSelection[i]
-        accents1.appendChild(accent)
+        var accent = document.createElement('h1');
+        accent.innerHTML = accentSelection[i];
+        accent.className = 'accents-text-overlay-styles';
+        accent.id = accentSelection[i];
+        accents1.appendChild(accent);
     }
 
     const accents2 = document.createElement('div');
-    accents1.className = 'accent-popup';
+    accents2.className = 'accents-popup-overlay-wrapper';
     overlay.appendChild(accents2);
 
     for (let i=6; i<15; i++) {
-        var accent = document.createElement('h2')
-        accent.innerHTML = accentSelection[i]
-        accent.className = 'accent-text'
-        accent.id = accentSelection[i]
-        accents2.appendChild(accent)
+        var accent = document.createElement('h1');
+        accent.innerHTML = accentSelection[i];
+        accent.className = 'accents-text-overlay-styles';
+        accent.id = accentSelection[i];
+        accents2.appendChild(accent);
     }
 
-    overlay.style.display = "none";
+    overlay.style.display = "block";
 }
 
 init()
+
+window.onload = function() {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = chrome.runtime.getURL('content.css');
+    
+    document.head.appendChild(link);
+}
 
 var hotkey;
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -50,7 +59,7 @@ var isActive = false;
 
 /* shorcut pressed */
 document.addEventListener('keydown', (event) => {
-    if (!isActive && (event.altKey || event.ctrlKey) && event.code == hotkey.slice(-1)) {
+    if (!isActive && (event.altKey || event.ctrlKey) && event.code === hotkey.slice(-1)) {
         isActive = True
     }
     else if (isActive && (event.altKey || event.ctrlKey)) {
