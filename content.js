@@ -54,16 +54,31 @@ var isActive = false;
 var altCtrlPressed = false;
 var keyPressed = false;
 
+window.addEventListener('keydown', (event) => {
+    if (event.altKey) {
+        event.preventDefault()
+    }
+})
+
+console.log("LOGGING: howdy there matey")
 /* shorcut pressed */
 document.addEventListener('keydown', (event) => {
+    console.log(event.code)
     if (event.altKey || event.ctrlKey) { // Alt or Ctrl key pressed
-        altCtrlPressed = true;
+        if (hotkey[0][0].toLowerCase() === "alt" && event.altKey) {
+            altCtrlPressed = true;
+            console.log('ALT KEY: hola soy dora!')
+        }
+        else if (hotkey[0][0].toLowerCase() === "ctrl" && event.ctrlKey) {
+            altCtrlPressed = true;
+        }
     }
-    else if (event.code.toLowerCase() === hotkey[0].slice(-1)[0].toLowerCase()) { // the action key (e.g. 'S') is pressed
+    else if (hotkey != undefined && (event.key.toLowerCase() === hotkey[0].slice(-1)[0].toLowerCase())) { // the action key (e.g. 'S') is pressed
         keyPressed = true;
+        console.log('ACTION KEY: moy boy')
     }
 
-    if (!isActive && (altCtrlPressed || keyPressed)) { // if they were both pressed at the same times, the extension is activated
+    if (!isActive && (altCtrlPressed && keyPressed)) { // if they were both pressed at the same times, the extension is activated
         overlay.style.display = "block";
         isActive = true;
     }
@@ -71,27 +86,37 @@ document.addEventListener('keydown', (event) => {
 
 /* shortcut or key released */
 document.addEventListener('keyup', (event) => {
+    console.log("Ok")
     if (isActive && (event.altKey || event.ctrlKey)) { // Alt or Ctrl key released - extension is deactivated
-        isActive = false;
-        altCtrlPressed = false;
+        if (hotkey[0][0].toLowerCase() === "alt" && event.altKey) {
+            isActive = false;
+            altCtrlPressed = false;
+            overlay.style.display = "none";
+            currSelection = -1;
+            insertAccent(accentSelection[currSelection])
+        }
+        else if (hotkey[0][0].toLowerCase() === "ctrl" && event.ctrlKey) {
+            isActive = false;
+            altCtrlPressed = false;
+            overlay.style.display = "none";
+            currSelection = -1;
+            insertAccent(accentSelection[currSelection])
+        }
+    }
+    else if (isActive && (event.key.toLowerCase() === hotkey[0].slice(-1)[0].toLowerCase())) { // action key is released - cycling through the accents
         keyPressed = false;
-    }
-    else if (isActive && (event.code.toLowerCase() === hotkey[0].slice(-1)[0].toLowerCase())) { // action key is released - cycling through the accents
-        
-    }
-    if (isActive && (event.ctrlKey || event.altKey)) {
-        overlay.style.display = "none";
-        currSelection = 0;
-        isActive = false
-        insertAccent(accentSelection[currSelection])
-    }
-    else if (isActive && (event.code === hotkey[0].slice(-1)[0])) {
         currSelection ++;
-        updateOverlay(currSelection);
+        updateOverlay(currSelection % accentSelection.length);
     }
 });
 
 function updateOverlay(accentIndex) {
+    if (accentIndex === 0) {
+        document.getElementById(accentSelection[accentSelection.length-1]).style.backgroundColor = "#002153";
+    }
+    else {
+        document.getElementById(accentSelection[accentIndex-1]).style.backgroundColor = "#002153";
+    }
     overlay.style.display = "block";
     document.getElementById(accentSelection[accentIndex]).style.backgroundColor = "#ce1221";
 }
