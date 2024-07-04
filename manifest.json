@@ -24,10 +24,17 @@
     "commands":{
         "activate-accents": {
             "suggested_key": {
+                "default": "Alt+W",
+                "mac": "Alt+W"
+            },
+            "description": "Activate the accents feature, and while holding the modifier key (Ctrl or Alt) keep tapping the letter key to cycle through a list of French accents. Release to insert."
+        },
+        "move-selection-down": {
+            "suggested_key": {
                 "default": "Alt+S",
                 "mac": "Alt+S"
             },
-            "description": "Activate the accents feature. "
+            "description": "After activating the accents feature, use this shortcut to jump between the lines for faster navigation."
         },
         "copy-accents": {
             "suggested_key": {
