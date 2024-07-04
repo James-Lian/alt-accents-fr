@@ -89,6 +89,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 function handleKeyPress(event) {
+    console.log(event.key)
     if (event.altKey || event.ctrlKey) { // Alt or Ctrl key pressed
         if ((hotkey[0][0].toLowerCase() === "alt" && event.altKey) || (hotkey[0][0].toLowerCase() === "ctrl" && event.ctrlKey)) {
             altCtrlPressed = true;
@@ -111,7 +112,7 @@ function handleKeyRelease(event) {
             overlay.style.display = "none";
             selectedAccent = accentSelection[currSelection % accentSelection.length]
             currSelection = -1;
-            insertAccent(accentSelection[currSelection]);
+            insertAccent();
         }
     }
     if (isActive && event.key === hotkey[0].slice(-1)[0].toLowerCase()) {
@@ -135,8 +136,18 @@ function updateOverlay(accentIndex) {
     document.getElementById(accentSelection[accentIndex]).style.backgroundColor = "#ce1221";
 }
 
-function insertAccent(text) {
-    const activeElement = document.activeElement;
+function insertAccent() {
+    var activeElement = document.activeElement;
+
+    // if the website if Google Docs, then the active element will be inside the iFrame
+    if (isGoogleDocs) {
+        var editingIFrame = document.querySelector('iframe.docs-texteventtarget-iframe')
+        if (editingIFrame) {
+            if (editingIFrame.contentDocument) {
+                activeElement = editingIFrame.contentDocument.activeElement;
+            }
+        }   
+    }
 
     if (activeElement && (activeElement.tagName === "TEXTAREA" || activeElement.tagName === "INPUT")) {
         const start = activeElement.selectionStart;
@@ -146,12 +157,51 @@ function insertAccent(text) {
     }
     else if (activeElement && activeElement.isContentEditable) {
         var selection = window.getSelection()
-        if (selection.getRangeAt() && selection.rangeCount) {
-            var range = selection.getRangeAt(0);
-            range.deleteContents()
-            range.insertNode(document.createTextNode(selectedAccent));
+        console.log(selection)
+        if (window.getSelection) {
+            console.log(selection.getRangeAt, selection.rangeCount)
+            if (selection.getRangeAt && selection.rangeCount) {
+                console.log('my buddy bro')
+                var range = selection.getRangeAt(0);
+                range.deleteContents()
+                range.insertNode(document.createTextNode(selectedAccent));
 
-            selection.modify("move", "right", "character")
+                selection.modify("move", "right", "character")
+            }
+        }
+        else {
+            console.log('well what do you know')
         }
     }
 }
+
+/* Google Docs functionality */
+// the complex javascript logic on Google Docs pages blocks the previous event listeners in some way
+// the following code will circumvent that to allow the extension to function on Google Docs
+
+function isGoogleDocs() {
+    // true or false
+    return window.location.host === 'docs.google.com' && window.location.pathname.startsWith('/document')
+}
+
+window.addEventListener('load', () => {
+    if (isGoogleDocs) {
+        var editingIFrame = document.querySelector('iframe.docs-texteventtarget-iframe');
+        if (editingIFrame) {
+            if (editingIFrame.contentDocument) {
+                editingIFrame.contentDocument.addEventListener("keydown", handleKeyPress);
+                editingIFrame.contentDocument.addEventListener("keyup", handleKeyRelease);
+                console.log("Eyyy")
+            }
+            else {
+                console.log("Welp")
+            }
+        }
+        else {
+            console.log('iFrame not found.')
+        }
+    }
+    else {
+        console.log("not a google docs page")
+    }
+});
