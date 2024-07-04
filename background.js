@@ -35,6 +35,13 @@ chrome.commands.onCommand.addListener((command) => {
                     console.log(response)
                   })();
             }
+            else if (command === "copy-accents") {
+                (async () => {
+                    const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+                    const response = await chrome.tabs.sendMessage(tab.id, {greeting: "copy"});
+                    console.log(response)
+                  })();
+            }
         }
     });
 });

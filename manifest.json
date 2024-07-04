@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "French Accents",
+    "name": "Alt-Accents (FR)",
     "description": "Write French accents using a hotkey",
     "version": "1.0",
     "permissions": ["activeTab", "scripting", "tabs"],
@@ -9,7 +9,8 @@
             "16": "images/icon16.png",
             "48": "images/icon48.png",
             "128": "images/icon128.png"
-        }
+        },
+        "default_popup": "popup.html"
     },
     "background": {
         "service_worker": "background.js"

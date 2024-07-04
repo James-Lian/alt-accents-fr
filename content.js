@@ -79,6 +79,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         }
     }
+    else if (request.greeting === "copy") {
+        var allAccents = "";
+        for (accent of accentSelection) {
+            allAccents += accent + " ";
+        }
+        navigator.clipboard.writeText(allAccents);
+        notification("Accents copied to clipboard!")
+    }
     else if (request.greeting) {
         hotkey = request.greeting;
         sendResponse({received: hotkey});
@@ -141,36 +149,33 @@ function insertAccent() {
 
     // if the website if Google Docs, then the active element will be inside the iFrame
     if (isGoogleDocs) {
-        var editingIFrame = document.querySelector('iframe.docs-texteventtarget-iframe')
-        if (editingIFrame) {
-            if (editingIFrame.contentDocument) {
-                activeElement = editingIFrame.contentDocument.activeElement;
-            }
-        }   
+        navigator.clipboard.writeText(selectedAccent);
+        notification("Accent copied to clipboard (Google Docs).")
     }
-
-    if (activeElement && (activeElement.tagName === "TEXTAREA" || activeElement.tagName === "INPUT")) {
-        const start = activeElement.selectionStart;
-        const end = activeElement.selectionEnd;
-        activeElement.value = activeElement.value.substring(0, start) + selectedAccent + activeElement.value.substring(end);
-        activeElement.selectionStart = activeElement.selectionEnd = start + 1;
-    }
-    else if (activeElement && activeElement.isContentEditable) {
-        var selection = window.getSelection()
-        console.log(selection)
-        if (window.getSelection) {
-            console.log(selection.getRangeAt, selection.rangeCount)
-            if (selection.getRangeAt && selection.rangeCount) {
-                console.log('my buddy bro')
-                var range = selection.getRangeAt(0);
-                range.deleteContents()
-                range.insertNode(document.createTextNode(selectedAccent));
-
-                selection.modify("move", "right", "character")
-            }
+    else {
+        if (activeElement && (activeElement.tagName === "TEXTAREA" || activeElement.tagName === "INPUT")) {
+            const start = activeElement.selectionStart;
+            const end = activeElement.selectionEnd;
+            activeElement.value = activeElement.value.substring(0, start) + selectedAccent + activeElement.value.substring(end);
+            activeElement.selectionStart = activeElement.selectionEnd = start + 1;
         }
-        else {
-            console.log('well what do you know')
+        else if (activeElement && activeElement.isContentEditable) {
+            var selection = window.getSelection()
+            console.log(selection)
+            if (window.getSelection) {
+                console.log(selection.getRangeAt, selection.rangeCount)
+                if (selection.getRangeAt && selection.rangeCount) {
+                    console.log('my buddy bro')
+                    var range = selection.getRangeAt(0);
+                    range.deleteContents()
+                    range.insertNode(document.createTextNode(selectedAccent));
+    
+                    selection.modify("move", "right", "character")
+                }
+            }
+            else {
+                console.log('well what do you know')
+            }
         }
     }
 }
@@ -191,17 +196,35 @@ window.addEventListener('load', () => {
             if (editingIFrame.contentDocument) {
                 editingIFrame.contentDocument.addEventListener("keydown", handleKeyPress);
                 editingIFrame.contentDocument.addEventListener("keyup", handleKeyRelease);
-                console.log("Eyyy")
-            }
-            else {
-                console.log("Welp")
             }
         }
-        else {
-            console.log('iFrame not found.')
-        }
-    }
-    else {
-        console.log("not a google docs page")
     }
 });
+
+function notification(text) {
+    if (!window.Notification) {
+        console.log('Alt-Accents: Browser does not support notifications.');
+    }
+    else {
+        if (Notification.permission === "granted") {
+            var notify = new Notification('Alt-Accents', {
+                body: text,
+                icon: "images/icon48.png"
+            });
+        }
+        else {
+            Notification.requestPermission().then((p) => {
+                if (p === "granted") {
+                    var notify = new Notification('Alt-Accents', {
+                        body: text,
+                        icon: "images/icon48.png"
+                    });
+                } else {
+                    console.log("Alt-Accents: User blocked notifications.");
+                }
+            }).catch((err) => {
+                console.log(err)
+            });
+        }
+    }
+}
