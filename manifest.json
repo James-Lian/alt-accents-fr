@@ -48,7 +48,7 @@
                 "default": "Alt+P",
                 "mac": "Alt+P"
             },
-            "description": "NAH my bruv Copy a list of all French accents to your clipboard."
+            "description": "Copy a list of all French accents to your clipboard."
         }
     }
 }
