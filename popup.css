@@ -1,0 +1,23 @@
+#header {
+    background-color: #e1edf2;
+    text-align: center;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+#domain-display {
+    line-height: 0;
+}
+
+button {
+    border: none;
+    padding: 8px 8px;
+    border-radius: 8px;
+}
+
+button:hover{
+    background-color:lightgray;
+    transition: 0.3s;
+}
