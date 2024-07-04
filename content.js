@@ -38,7 +38,9 @@ function init() {
     overlay.style.display = "none";
 }
 
-init()
+init();
+
+var selectedAccent = "";
 
 /* INPUT */
 
@@ -51,7 +53,7 @@ var keyPressed = false;
 var hotkey;
 // full shortcut pressed - received message, input handled by background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => { 
-    if (request.greeting === "move") {
+    if (request.greeting === "down") {
         sendResponse({received: "received"});
         if (isActive) {
             if ((currSelection % accentSelection.length >= 0) && (currSelection % accentSelection.length <= 5)) {
@@ -60,6 +62,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
             else {
                 currSelection = 0;
+                updateOverlay(currSelection);
+            }
+        }
+    }
+    else if (request.greeting === "left") {
+        sendResponse({received: "received"});
+        if (isActive) {
+            if (currSelection === 0) {
+                currSelection = accentSelection.length - 1;
+                updateOverlay(currSelection);
+            }
+            else {
+                currSelection --;
                 updateOverlay(currSelection);
             }
         }
@@ -87,12 +102,14 @@ function handleKeyPress(event) {
 }
 
 function handleKeyRelease(event) {
+    console.log(event.key)
     if (isActive && (!event.altKey || !event.ctrlKey)) { // Alt or Ctrl key released - extension is deactivated
         if ((hotkey[0][0].toLowerCase() === "alt" && !event.altKey) || (hotkey[0][0].toLowerCase() === "ctrl" && !event.ctrlKey)) {
             isActive = false;
             altCtrlPressed = false;
             keyPressed = false;
             overlay.style.display = "none";
+            selectedAccent = accentSelection[currSelection % accentSelection.length]
             currSelection = -1;
             insertAccent(accentSelection[currSelection]);
         }
@@ -124,5 +141,17 @@ function insertAccent(text) {
     if (activeElement && (activeElement.tagName === "TEXTAREA" || activeElement.tagName === "INPUT")) {
         const start = activeElement.selectionStart;
         const end = activeElement.selectionEnd;
+        activeElement.value = activeElement.value.substring(0, start) + selectedAccent + activeElement.value.substring(end);
+        activeElement.selectionStart = activeElement.selectionEnd = start + 1;
+    }
+    else if (activeElement && activeElement.isContentEditable) {
+        var selection = window.getSelection()
+        if (selection.getRangeAt() && selection.rangeCount) {
+            var range = selection.getRangeAt(0);
+            range.deleteContents()
+            range.insertNode(document.createTextNode(selectedAccent));
+
+            selection.modify("move", "right", "character")
+        }
     }
 }

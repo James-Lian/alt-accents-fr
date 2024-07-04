@@ -24,7 +24,14 @@ chrome.commands.onCommand.addListener((command) => {
             else if (command === 'move-selection-down') {
                 (async () => {
                     const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
-                    const response = await chrome.tabs.sendMessage(tab.id, {greeting: "move"});
+                    const response = await chrome.tabs.sendMessage(tab.id, {greeting: "down"});
+                    console.log(response)
+                  })();
+            }
+            else if (command === 'move-selection-left') {
+                (async () => {
+                    const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+                    const response = await chrome.tabs.sendMessage(tab.id, {greeting: "left"});
                     console.log(response)
                   })();
             }

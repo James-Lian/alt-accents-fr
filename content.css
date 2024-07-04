@@ -16,7 +16,7 @@
 #overlay-box-accents-jj {
     display: block;
     width: fit-content;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     padding: 8px 8px;
     border-radius: 10px;
 }

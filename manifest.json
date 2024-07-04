@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "French Accents",
     "description": "Write French accents using a hotkey",
-    "version": "0.1",
+    "version": "1.0",
     "permissions": ["activeTab", "scripting", "tabs"],
     "action": {
         "default_icon": {
@@ -36,12 +36,19 @@
             },
             "description": "After activating the accents feature, use this shortcut to jump between the lines for faster navigation."
         },
+        "move-selection-left": {
+            "suggested_key": {
+                "default": "Alt+A",
+                "mac": "Alt+A"
+            },
+            "description": "After activating the accents feature, use this shortcut to cycle backwards."
+        },
         "copy-accents": {
             "suggested_key": {
                 "default": "Alt+P",
                 "mac": "Alt+P"
             },
-            "description": "Copy a list of all French accents to your clipboard."
+            "description": "NAH my bruv Copy a list of all French accents to your clipboard."
         }
     }
 }
