@@ -1,3 +1,7 @@
+html {
+    width: 300px;
+}
+
 #header {
     background-color: #e1edf2;
     text-align: center;
@@ -24,4 +28,8 @@ button {
 button:hover{
     background-color:lightgray;
     transition: 0.3s;
+}
+
+button:active{
+    background-color:skyblue;
 }
