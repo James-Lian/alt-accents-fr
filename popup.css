@@ -11,6 +11,10 @@
     line-height: 0;
 }
 
+#description {
+    line-height: 1.63;
+}
+
 button {
     border: none;
     padding: 8px 8px;

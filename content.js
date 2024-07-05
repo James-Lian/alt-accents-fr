@@ -1,4 +1,6 @@
 var accentSelection = ["é", "è", "ê", "à", "ç" ,"ù", "«", "»", "ë", "ï", "ü", "â", "ô", "î", "û"];
+var uppercaseAccents = ['É', 'È', 'Ê', 'À', 'Ç', 'Ù', '«', '»', 'Ë', 'Ï', 'Ü', 'Â', 'Ô', 'Î', 'Û']
+
 var overlay;
 
 function init() {
@@ -49,13 +51,14 @@ var isActive = false;
 
 var altCtrlPressed = false;
 var keyPressed = false;
+var capsLock = false;
 
 var hotkey;
 // full shortcut pressed - received message, input handled by background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => { 
     if (request.greeting === "down") {
         sendResponse({received: "received"});
-        if (isActive) {
+        if (isActive === true) {
             if ((currSelection % accentSelection.length >= 0) && (currSelection % accentSelection.length <= 5)) {
                 currSelection = 6;
                 updateOverlay(currSelection);
@@ -68,7 +71,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
     else if (request.greeting === "left") {
         sendResponse({received: "received"});
-        if (isActive) {
+        if (isActive === true) {
             if (currSelection === 0) {
                 currSelection = accentSelection.length - 1;
                 updateOverlay(currSelection);
@@ -80,11 +83,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
     else if (request.greeting === "copy") {
-        var allAccents = "";
-        for (accent of accentSelection) {
-            allAccents += accent + " ";
-        }
-        navigator.clipboard.writeText(allAccents);
+        let allAccents = accentSelection.concat(uppercaseAccents)
+        navigator.clipboard.writeText(allAccents.join(' '));
         notification("Accents copied to clipboard!")
     }
     else if (request.greeting) {
@@ -103,6 +103,14 @@ function handleKeyPress(event) {
             altCtrlPressed = true;
         }
     }
+    else if (event.getModifierState('CapsLock')) {
+        capsLock = true;
+        updateOverlay(currSelection);
+    }
+    else if (!event.getModifierState('CapsLock')) {
+        capsLock = false;
+        updateOverlay(currSelection);
+    }
     
     if (!isActive && (altCtrlPressed && keyPressed)) { // if they were both pressed at the same times, the extension is activated
         overlay.style.display = "block";
@@ -118,12 +126,17 @@ function handleKeyRelease(event) {
             altCtrlPressed = false;
             keyPressed = false;
             overlay.style.display = "none";
-            selectedAccent = accentSelection[currSelection % accentSelection.length]
+            if (capsLock) {
+                selectedAccent = uppercaseAccents[currSelection % accentSelection.length]
+            }
+            else {
+                selectedAccent = accentSelection[currSelection % accentSelection.length]
+            }
             currSelection = -1;
             insertAccent();
         }
     }
-    if (isActive && event.key === hotkey[0].slice(-1)[0].toLowerCase()) {
+    if (isActive && event.key.toLowerCase() === hotkey[0].slice(-1)[0].toLowerCase()) {
         keyPressed = false;
         currSelection ++;
         updateOverlay(currSelection % accentSelection.length);
@@ -137,10 +150,20 @@ document.addEventListener('keydown', handleKeyPress);
 document.addEventListener('keyup', handleKeyRelease);
 
 function updateOverlay(accentIndex) {
+    if (capsLock) {
+        for (let i=0; i<accentSelection.length; i++) {
+            document.getElementById(accentSelection[i]).innerHTML = uppercaseAccents[i]
+        }
+    }
+    else {
+        for (accent of accentSelection) {
+            document.getElementById(accent).innerHTML = accent
+        }    
+    }
+
     for (accent of accentSelection) {
         document.getElementById(accent).style.backgroundColor = "#002153";
     }
-    overlay.style.display = "block";
     document.getElementById(accentSelection[accentIndex]).style.backgroundColor = "#ce1221";
 }
 
@@ -148,7 +171,7 @@ function insertAccent() {
     var activeElement = document.activeElement;
 
     // if the website if Google Docs, then the active element will be inside the iFrame
-    if (isGoogleDocs) {
+    if (isGoogleDocs()) {
         navigator.clipboard.writeText(selectedAccent);
         notification("Accent copied to clipboard (Google Docs).")
     }
@@ -190,7 +213,7 @@ function isGoogleDocs() {
 }
 
 window.addEventListener('load', () => {
-    if (isGoogleDocs) {
+    if (isGoogleDocs()) {
         var editingIFrame = document.querySelector('iframe.docs-texteventtarget-iframe');
         if (editingIFrame) {
             if (editingIFrame.contentDocument) {
@@ -207,18 +230,26 @@ function notification(text) {
     }
     else {
         if (Notification.permission === "granted") {
-            var notify = new Notification('Alt-Accents', {
+            const notify = new Notification('Alt-Accents', {
                 body: text,
                 icon: "images/icon48.png"
             });
+            notify.onclick = () => {
+                notify.close();
+                window.parent.focus();
+            }
         }
         else {
             Notification.requestPermission().then((p) => {
                 if (p === "granted") {
-                    var notify = new Notification('Alt-Accents', {
+                    const notify = new Notification('Alt-Accents', {
                         body: text,
                         icon: "images/icon48.png"
                     });
+                    notify.onclick = () => {
+                        notify.close();
+                        window.parent.focus();
+                    }
                 } else {
                     console.log("Alt-Accents: User blocked notifications.");
                 }
