@@ -1,4 +1,4 @@
-#Alt-Accents (FR): A Chrome Extenion for easy input of French accents
+# Alt-Accents (FR): A Chrome Extenion for easy input of French accents
 Are you a laptop user? Are you unable to use Alt codes? Do you find installing new languages on your OS time-consuming and difficult to use?
 Well, no worries. Alt-Accents (FR) allows you to input French accents with simple hotkeys (é è ê).
 One hotkey is all that is necessary, but if you wish to enhance your experience, you can use more. Check out [chrome://extensions/shortcuts](chrome://extensions/shortcuts) for all of the shortcuts.
