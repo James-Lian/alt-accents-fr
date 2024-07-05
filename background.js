@@ -1,5 +1,7 @@
 var hotkey = [];
 
+// send messages to the content script based on different hotkey inputs
+// the content script will act differently depending on the message
 chrome.commands.onCommand.addListener((command) => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         if (tabs.length > 0) {
