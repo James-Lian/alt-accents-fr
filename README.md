@@ -15,7 +15,7 @@ One hotkey is all that is necessary, but if you wish to enhance your experience,
 ![An image displaying the extension in action - a translucent overlay in the center of the screen displaying a list of all French accents from which the user may select one](https://github.com/James-Lian/alt-accents-fr/blob/main/images/demo.png)
 
 ## Want to use this extension for yourself?
-Chrome Web Store charges a $5 fee to allow developers to publish their own extensions, which I don't find very enticing. If you want to use this extension for yourself...
+Chrome Web Store charges a $5 fee to allow developers to publish their own extensions, which I don't find very enticing 😅. If you want to use this extension for yourself...
 1. Download the entire folder as a ZIP file, and extract it.
 2. Go to chrome://extensions, and turn on Developer mode (top-right)
 3. Click on "Load unpacked" and select the extracted folder.
